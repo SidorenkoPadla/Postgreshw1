@@ -22,7 +22,7 @@ create table if not exists Collection(
 
 create table if not exists Track(
 	track_id SERIAL primary key,
-	duration TIME not null check(duration > '1:00'),
+	duration TIME not null check(duration > '00:01:00'),
 	album_id int not null references Album(album_id),
 	track_title varchar(40) not null
 );

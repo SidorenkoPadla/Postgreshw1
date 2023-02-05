@@ -14,9 +14,6 @@ where a.album_id = t.album_id
 group by album_title
 order by avg(duration);
 
-select artist_name from artist a, album a2, album_artist aa 
-where a2.year_of_release >= '2020-01-01' and a2.year_of_release <= '2020-12-31' and aa.artist_id = a.artist_id and aa.album_id = a2.album_id 
-
 select artist_name
 from artist a, album_artist aa, album a2 
 where a.artist_id = aa.artist_id and artist_name not in
@@ -44,14 +41,15 @@ select artist_name
 from track t, artist a, album a2, album_artist aa 
 where duration = (select min(duration) from track t2) and a2.album_id = t.album_id and aa.album_id = a2.album_id and aa.artist_id = a.artist_id;
 
-select album_title
-from album a,track t
-where a.album_id = t.album_id
-group by album_title
-having count(track_id) = min((select COUNT(track_id) 
-	from track t2, album a2
-	where t2.album_id = a2.album_id
-	group by album_title));
+select a.album_title from track t, album a
+where a.album_id = t.album_id 
+group by a.album_title 
+having count(t.album_id) = (select min(ft.cou)
+from (select count(t.album_id) cou
+	from track t, album a
+	where a.album_id = t.album_id
+	group by a.album_title) ft);
+
 
 
 
